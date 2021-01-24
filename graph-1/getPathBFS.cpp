@@ -1,14 +1,12 @@
-#include <iostream>
-#include <cstring>
-#include <map>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
-void printBFS(bool **edges, int n, int s, int e, bool *visited)
+/************************MemoryEfficient MEthod********************/
+void printBFS(bool **edges, int n, int s, int e, unordered_map<int,bool> visited)
 {
     bool path_exist=false;
     queue<int> q;
     q.push(s);
-    map<int, int> mp;
+    unordered_map<int, int> mp;
     visited[s] = true;
     while (!q.empty())
     {
@@ -37,6 +35,38 @@ void printBFS(bool **edges, int n, int s, int e, bool *visited)
         i = mp[i];
     }
 }
+/**************Second Approach*****************/
+vector<int> *getPathBFS(bool **edges,int n,int start,int end,unordered_map<int,bool> visited){
+    queue<int> q;
+    q.push(start);
+    visited[start]=true;
+    bool done=false;
+    unordered_map<int,int> mp;
+    while(!q.empty() && !done){
+        int curr=q.front();
+        q.pop();
+        for(int i=0;i<n;i++){
+            if(!visited[i] && edges[curr][i]){
+                mp[i]=curr;
+                q.push(i);
+                visited[i]=true;
+                if(i==end){
+                    done=true;
+                    break;
+                }
+            }
+        }
+    }
+    if(!done) return nullptr;
+    vector<int> *output=new vector<int>();
+    int cur=end;
+    output->push_back(end);
+    while(cur!=start){
+        cur=mp[cur];
+        output->push_back(cur);
+    }
+    return output;
+}
 int main()
 {
     int n, e; //n->vertices,e->edges
@@ -58,22 +88,23 @@ int main()
         edges[f][s] = 1;
         edges[s][f] = 1;
     }
-    //visited array
-    bool *visited = new bool[n];
-    memset(visited, false, sizeof(visited));
     //call your working function below
+    unordered_map<int,bool> visitedMap;
+    for(int i=0;i<n;i++){
+        visitedMap[i]=false;
+    }
     int start, end;
     cin >> start >> end;
-    printBFS(edges, n, start, end, visited);
-    // if(ans!=nullptr){
-    // for(int i=0;i<ans->size();i++){
-    //     cout<<ans->at(i)<<" ";
-    // }
-    // }
+    vector<int> *ans=getPathBFS(edges,n,start,end,visitedMap);
+    if(ans!=nullptr){
+        for(int i=0;i<ans->size();i++){
+            cout<<ans->at(i)<<" ";
+        }
+    }
     for (int i = 0; i < n; i++)
     {
         delete[] edges[i];
     }
     delete[] edges;
-    delete[] visited;
+    delete ans;
 }
