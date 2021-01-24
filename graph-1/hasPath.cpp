@@ -1,27 +1,45 @@
-/**
- * author: Ankit Bhankharia
-**/
-#include <iostream>
-#include <cstring>
+#include <bits/stdc++.h>
 using namespace std;
-bool hasPath(bool **edges,int n,int s,int e,bool *visited){
-    if(edges[s][e]) return true;
-    visited[s]=true;
+/**************DFS METHOD**********************/
+bool hasPathDFS(int **edges,int n,int start,int end,bool *visited){
+    if(edges[start][end]) return true;
+    visited[start]=true;
     for(int i=0;i<n;i++){
-        if(edges[s][i] && !visited[i]){
-            if(hasPath(edges,n,i,e,visited)) return true;
+        if(!visited[i] && edges[start][i] && i!=start){
+            if(hasPathDFS(edges,n,i,end,visited)) return true;
+        }
+    }
+    return false;
+}
+/****************BFS Method***********************/
+bool hasPathBFS(int **edges,int n,int start,int end,bool *visited){
+    queue<int> q;
+    q.push(start);
+    visited[start]=true;
+    while(!q.empty()){
+        int curr_ele=q.front();
+        q.pop();
+        if(edges[curr_ele][end]) return true;
+        for(int i=0;i<n;i++){
+            if(!visited[i] && edges[curr_ele][i] && i!=curr_ele){
+                q.push(i);
+                visited[i]=true;
+            }
         }
     }
     return false;
 }
 int main(){
-    int n,e;  //n->vertices,e->edges
+    ios_base::sync_with_stdio(false);
+    cin.tie(0);
+    cout.tie(0);
+    int n,e;
     cin>>n>>e;
-    bool **edges=new bool*[n];  //edges array(2D)
+    int **edges=new int*[n];
     for(int i=0;i<n;i++){
-        edges[i]=new bool[n];
+        edges[i]=new int[n];
         for(int j=0;j<n;j++){
-            edges[i][j]=false;
+            edges[i][j]=0;
         }
     }
     //taking input of edges
@@ -31,17 +49,16 @@ int main(){
         edges[f][s]=1;
         edges[s][f]=1;
     }
-    //visited array
     bool *visited=new bool[n];
     memset(visited,false,sizeof(visited));
-    //call your working function below
     int start,end;
     cin>>start>>end;
-    bool ans=hasPath(edges,n,start,end,visited);
+    // bool ans=hasPathDFS(edges,n,start,end,visited);
+    bool ans=hasPathBFS(edges,n,start,end,visited);
     ans?cout<<"true":cout<<"false";
     for(int i=0;i<n;i++){
         delete [] edges[i];
     }
-    delete [] edges;
+    delete[] edges;
     delete[] visited;
 }
