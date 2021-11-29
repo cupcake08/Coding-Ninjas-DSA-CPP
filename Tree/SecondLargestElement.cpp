@@ -1,39 +1,29 @@
-void change(TreeNode<int> *root,int m)
-{
-	if(root==nullptr) return;
-	if(root->data==m)
-	{
-		root->data=INT_MIN;
-	}
-	for(int i=0;i<root->children.size();i++)
-	{
-		change(root->children[i],m);
-	}
+#define pt pair<TreeNode<int>*,TreeNode<int>*>
+#define ss second
+#define ff first
+
+pt *largest(TreeNode<int> *root){
+    if(root == NULL) return new pt({NULL,NULL});
+    pt *ans = new pt({root,NULL});
+    for(auto &node:root->children){
+        pt *sub = largest(node);
+        if(sub->ff->data > ans->ff->data){
+            if(sub->ss == NULL){
+                ans->ss = ans->ff;
+                ans->ff = sub->ff;
+            }else{
+                if(sub->ss->data > ans->ff->data){
+                    ans->ss = sub->ss;
+                    ans->ff = sub->ff;
+                }else{
+                    ans->ss = ans->ff;
+                    ans->ff = sub->ff;
+                }
+            }
+        }else if(ans->ff->data != sub->ff->data && (ans->ss == NULL || sub->ff->data > ans->ss->data)) ans->ss = sub->ff;
+    }
+    return ans;
 }
-TreeNode<int> *largest(TreeNode<int> *root)
-{
-	if(root==nullptr) return root;
-	int max=root->data;
-	TreeNode<int> *maxNode=root;
-	for(int i=0;i<root->children.size();i++)
-	{
-		TreeNode<int> *large=largest(root->children[i]);
-		if(large==nullptr)
-		{
-			continue;
-		}
-		if(max<large->data)
-		{
-			max=large->data;
-			maxNode=large;
-		}
-	}
-	return maxNode;
-}
-TreeNode<int> *getSecondLargestNode(TreeNode<int> *root)
-{
-	if(root==nullptr) return NULL;
-	int large=largest(root)->data;
-	change(root,large);
-	return largest(root);
+TreeNode<int>* getSecondLargestNode(TreeNode<int>* root) {
+    return largest(root)->ss;
 }
