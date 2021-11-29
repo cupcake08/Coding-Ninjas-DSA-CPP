@@ -1,28 +1,20 @@
-#include <climits>
-int childSum(TreeNode<int> *root)
-{
-	int sum=root->data;
-	for(int i=0;i<root->children.size();i++)
-	{
-		sum+=root->children[i]->data;
-	}
-	return sum;
+int sum(TreeNode<int> *root){
+    if(root == NULL) return 0;
+    int ans = root->data;
+    for(auto &node:root->children) ans += node->data;
+    return ans;
 }
-TreeNode<int> *maxSumNode(TreeNode<int> *root)
-{
-	int rootSum=childSum(root);
-	TreeNode<int> *mxChildSum=root;
-	int mxSum=INT_MIN;
-	for(int i=0;i<root->children.size();i++)
-	{
-		TreeNode<int> *temp=maxSumNode(root->children[i]);
-		int tempSum=childSum(temp);
-		if(tempSum > mxSum)
-		{
-			mxSum=tempSum;
-			mxChildSum=temp;
-		}
-	}
-	if(rootSum > mxSum) return root;
-	return mxChildSum;
+TreeNode<int>* maxSumNode(TreeNode<int>* root) {
+    if(root == NULL) return root;
+    int s = sum(root);
+    TreeNode<int> *ans = root;
+    for(auto &node:root->children){
+        TreeNode<int> *temp = maxSumNode(node);
+        int tempS = sum(temp);
+        if(tempS > s){
+            s = tempS;
+            ans = temp;
+        }
+    }
+    return ans;
 }
