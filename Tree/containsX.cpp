@@ -1,9 +1,5 @@
-bool isPresent(TreeNode<int> *root,int x)
-{
-	if(root->data==x) return true;
-	for(int i=0;i<root->children.size();i++)
-	{
-		if(isPresent(root->children[i],x)) return true;
-	}
-	return false;
+bool isPresent(TreeNode<int>* root, int x) {
+    if(root == NULL) return 0; //not necessary on CN platform
+    if(root->data == x) return 1;
+    for(auto &node:root->children) if(isPresent(node,x)) return 1;
 }
