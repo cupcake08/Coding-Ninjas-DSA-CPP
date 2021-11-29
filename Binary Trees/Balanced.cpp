@@ -1,17 +1,14 @@
-pair<int,bool> heightAndBalance(BinaryTreeNode<int> *root)    //first=height,second=isBalanced
-{
-	pair<int,bool> p(0,true);
-	if(root==NULL) return p;
-	pair<int,bool> leftAns=heightAndBalance(root->left);
-	pair<int,bool> rightAns=heightAndBalance(root->right);
-	bool flag;
-	if(!(leftAns.second)||!(rightAns.second)||abs(leftAns.first-rightAns.first)>1) flag=false;
-	else flag=true;
-	p.first=max(leftAns.first,rightAns.first)+1;
-	p.second=flag;
-	return p;
+#define _BTN_ BinaryTreeNode<int>*
+#define _PB_ pair<int,bool>
+#define balanced second
+#define height first
+
+_PB_ check(_BTN_ root){
+    if(root == NULL) return {0,1};
+    _PB_ left = check(root->left);
+    _PB_ right = check(root->right);
+    bool flag = 1;
+    if(!left.balanced || !right.balanced || abs(left.height - right.height) > 1) flag=0;
+    return {max(left.height,right.height)+1,flag};
 }
-bool isBalanced(BinaryTreeNode<int> *root)
-{
-	return heightAndBalance(root).second;
-}
+bool isBalanced(_BTN_ root) { return check(root).balanced; }
