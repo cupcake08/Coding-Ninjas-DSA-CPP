@@ -1,49 +1,35 @@
-vector<Node<int> *> constructLinkedListForEachLevel(BinaryTreeNode<int> *root)
-{
-    vector<Node<int> *> array;
-    if(root==NULL) return array;
-    queue<BinaryTreeNode<int> *> q;
-    Node<int> *head = nullptr;
-    Node<int> *tail = nullptr;
-    q.push(root);
-    q.push(nullptr);
-    while (!q.empty())
-    {
+#define _NODE_ Node<int>
+#define _V_(T) vector<T>
+#define _BTN_ BinaryTreeNode<int>*
 
-        BinaryTreeNode<int> *front = q.front();
+_V_(_NODE_*) constructLinkedListForEachLevel(_BTN_ root){
+    if(root == NULL) return {};
+    queue<_BTN_> q;
+    q.push(root);
+    q.push(NULL);
+    _NODE_ *head = NULL,*tail=NULL;
+    _V_(_NODE_*) ans;
+    while(!q.empty()){
+        auto front = q.front();
         q.pop();
-        
-        if (front == nullptr)
-        {
-            array.push_back(head);
-            head=nullptr;
-            tail=nullptr;
-            if(q.empty())
-            {
-                break;
-            }
-            q.push(nullptr);
+        if(front == NULL){
+            ans.push_back(head);
+            head = NULL;
+            tail = NULL;
+            if(q.empty()) break;
+            q.push(NULL);
             continue;
         }
-        Node<int> *newNode=new Node<int>(front->data);
-        if(head==nullptr)
-        {
-            head=newNode;
-            tail=newNode;
-        }else
-        {
-            tail->next=newNode;
-            tail=newNode;
-        }
-        
-        if (front->left != nullptr)
-        {
-            q.push(front->left);
-        }
-        if (front->right != nullptr)
-        {
-            q.push(front->right);
+        if(front->left) q.push(front->left);
+        if(front->right) q.push(front->right);
+        _NODE_ *newNode = new _NODE_(front->data);
+        if(head){
+            tail->next = newNode;
+            tail = newNode;
+        }else{
+            head = newNode;
+            tail = newNode;
         }
     }
-    return array;
+    return ans;
 }
