@@ -1,16 +1,16 @@
 #include <climits>
-pair<int, int> getMinAndMax(BinaryTreeNode<int> *root) {
-    if(root==NULL)
-	{
-		pair<int,int> p;
-		p.first=INT_MAX;
-		p.second=INT_MIN;
-		return p;
-	}
-	pair<int,int> leftAns=getMinAndMax(root->left);
-	pair<int,int> rightAns=getMinAndMax(root->right);
-	pair<int,int> ans;
-	ans.first=min(root->data,min(leftAns.first,rightAns.first));
-	ans.second=max(root->data,max(leftAns.second,rightAns.second));
-	return ans;
+#include <algorithm>
+
+#define _PI_ pair<int,int>
+#define _MIN_ first
+#define _MAX_ second
+
+_PI_ getMinAndMax(BinaryTreeNode<int> *root) {
+	if(root == NULL) return {INT_MAX,INT_MIN};
+    _PI_ ans = {root->data,root->data};
+    _PI_ left = getMinAndMax(root->left);
+    _PI_ right = getMinAndMax(root->right);
+    ans._MIN_ = min({ans._MIN_,left._MIN_,right._MIN_});
+    ans._MAX_ = max({ans._MAX_,left._MAX_,right._MAX_});
+    return ans;
 }
