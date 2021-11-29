@@ -1,49 +1,26 @@
-#include <vector>
 #include <algorithm>
-vector<int> convertTreeToArray(BinaryTreeNode<int> *root)
-{
-    vector<int> v;
-    if(root==nullptr)
-    {
-        return v;
-    }
-    vector<int> leftArray=convertTreeToArray(root->left);
-    vector<int> rightArray=convertTreeToArray(root->right);
-    for(int i:leftArray)
-    {
-        v.push_back(i);
-    }
-    for(int i:rightArray)
-    {
-        v.push_back(i);
-    }
-    v.push_back(root->data);
-    return v;
-}
-void pairSum(BinaryTreeNode<int> *root, int sum) {
-    if(root==nullptr)
-    {
-        return;
-    }
-    vector<int> v=convertTreeToArray(root);
-    sort(v.begin(),v.end());
-    int i=0;
-    int j=v.size()-1;
-    while(i<j)
-    {
-        if(v[i]+v[j]==sum)
-        {
-            cout<<v[i]<<" "<<v[j]<<endl;
-            i++;
-            j--;
-        }else if(v[i]+v[j]<sum)
-        {
-            i++;
-        }else
-        {
-            j--;
-        }
-        
-    }
 
+#define _BTN_ BinaryTreeNode<int>*
+#define vi vector<int>
+
+vi v;
+void helper(_BTN_ root){
+    if(root){
+        v.push_back(root->data);
+        helper(root->left);
+        helper(root->right);
+    }
+}
+void pairSum(_BTN_ root, int sum) {
+    helper(root);
+    sort(begin(v),end(v));
+    int i=0,j=v.size()-1;
+    while(i<j){
+        int s = v[i]+v[j];
+        if(s==sum){
+            printf("%d %d\n",v[i],v[j]);
+            i++,j--;
+        }else if(s < sum) i++;
+        else j--;
+    }
 }
