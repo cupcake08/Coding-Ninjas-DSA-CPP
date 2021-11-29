@@ -1,33 +1,15 @@
-int getLCA(BinaryTreeNode<int>* root , int val1 , int val2){
-    // Write your code here
-    if(root==nullptr)
-    {
-        return -1;
+int getLCA(BinaryTreeNode <int>* root , int a, int b) {
+    if(root == NULL) return -1;
+    int d = root->data;
+    if(d==a || d==b) return d;
+    int left=-1,right=-1;
+    if(a>d && b >= d) right = getLCA(root->right,a,b);
+    else if(a < d && b < d) left = getLCA(root->left,a,b);
+    else{
+        left = getLCA(root->left,a,b);
+        right = getLCA(root->right,a,b);
     }
-    if(root->data == val1 || root->data == val2)
-    {
-        return root->data;
-    }
-    int x=-1;
-    int y=-1;
-    if(val1 > root->data && val2>= root->data)
-    {
-        y=getLCA(root->right,val1,val2);
-    }else if(val1 <root->data && val2<root->data)
-    {
-        x=getLCA(root->left,val1,val2);
-    }
-    x=getLCA(root->left,val1,val2);
-    y=getLCA(root->right,val1,val2);
-    if(x==-1 && y!=-1)
-    {
-        return y;
-    }else if(x!=-1 && y==-1)
-    {
-        return x;
-    }else if(x!=-1 && y!=-1)
-    {
-        return root->data;
-    }
-    return -1;
+    if(left != -1 && right != -1) return d;
+    else if(left != -1) return left;
+    return right;
 }
